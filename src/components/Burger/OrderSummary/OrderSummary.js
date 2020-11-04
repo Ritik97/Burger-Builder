@@ -1,5 +1,6 @@
 import React from 'react';
 import Auxiliary from '../../../hoc/Auxiliary';
+import classes from './OrderSummary.css';
 
 const orderSummary = (props) => {
 
@@ -17,6 +18,10 @@ return(
         {ingredientList}
         </ul> 
         <p>Continue to Chechout?</p>
+        <button className={[classes.Button, classes.Success].join(' ')} 
+        onClick={props.continuePurchase} >CONTINUE</button>
+        <button className={[classes.Button, classes.Danger].join(' ')} 
+        onClick={props.cancelPurchase} >CANCEL</button>
     </Auxiliary>
 );
 
