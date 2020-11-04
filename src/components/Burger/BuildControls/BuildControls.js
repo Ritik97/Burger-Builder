@@ -19,7 +19,7 @@ const buildControls = (props) => (
             })
         }
         {console.log('disabled: ' + props.purchasable)}
-        {props.purchasable ? <button className={classes.OrderButton}>Order Now </button> 
+        {props.purchasable ? <button className={classes.OrderButton} onClick={props.showModal}>Order Now </button> 
         : null}
         
     </div>

@@ -3,6 +3,9 @@ import Auxiliary from '../../hoc/Auxiliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import IngredientContext from '../../context/ingredient-context';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+/** The Modal should always be included where it has to be shown */
 
 const INGREDIENTS_PRICE = {
     Salad: 15,
@@ -21,9 +24,16 @@ class BurgerBuilder extends Component {
             Bacon: 0
         },
         purchasable: false,
-        totalPrice: 0
+        totalPrice: 0,
+        purchasing: false
     };
 
+    purchaseHandler = () => {
+        this.setState({
+            purchasing: true
+        })
+    };
+    
     updatePurchaseState = (ingredients) => {
         // const updatedIngredients = ingredients
         // let purchasable = false
@@ -35,7 +45,7 @@ class BurgerBuilder extends Component {
         // }
         const sum = Object.values(ingredients).reduce((acc, item) => {
             return acc + item
-        }, 0) 
+        }, 0)
 
         this.setState({
             purchasable: sum > 0
@@ -81,16 +91,20 @@ class BurgerBuilder extends Component {
         }
         return (
             <Auxiliary>
-
                 <IngredientContext.Provider value={{
                     addIngredient: this.addIngredient,
                     removeIngredient: this.removeIngredient,
                     disabled: disabledInfo
                 }}>
-                    <Burger ingredients={this.state.ingredients} />
-                    <BuildControls totalPrice={this.state.totalPrice} purchasable={this.state.purchasable} />
-                </IngredientContext.Provider>
 
+                    <Burger ingredients={this.state.ingredients} />
+                    <BuildControls totalPrice={this.state.totalPrice} 
+                    purchasable={this.state.purchasable} showModal={this.purchaseHandler}/>
+                    
+                </IngredientContext.Provider>
+                <Modal show={this.state.purchasing}>
+                    <OrderSummary ingredients={this.state.ingredients} />
+                </Modal>
             </Auxiliary>
         );
     };
