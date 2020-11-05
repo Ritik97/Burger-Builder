@@ -7,8 +7,12 @@ const toolbar = (props) => (
 
 <header className={classes.Toolbar} >
     <div>Drawer Toggle</div>
+    <div className={classes.Logo}>
     <Logo />
+    </div>
+    <nav className={classes.Desktop} >
     <NavigationItems />
+    </nav>
 </header>
 
 );
