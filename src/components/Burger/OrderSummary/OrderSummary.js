@@ -22,7 +22,7 @@ return(
         <button className={[classes.Button, classes.Success].join(' ')} 
         onClick={props.continuePurchase} >CONTINUE</button>
         <button className={[classes.Button, classes.Danger].join(' ')} 
-        onClick={props.cancelPurchase} >CANCEL</button>
+        onClick={props.clicked} >CANCEL</button>
     </Auxiliary>
 );
 
