@@ -17,6 +17,7 @@ return(
         <ul>
         {ingredientList}
         </ul> 
+        <p><strong>Total Price: ₹ {props.totalPrice} </strong></p>
         <p>Continue to Chechout?</p>
         <button className={[classes.Button, classes.Success].join(' ')} 
         onClick={props.continuePurchase} >CONTINUE</button>
