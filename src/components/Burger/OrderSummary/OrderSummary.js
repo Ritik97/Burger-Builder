@@ -12,6 +12,7 @@ return <li key={igkey}>{igkey} : {ingredients[igkey]}</li>
 
 return(
     <Auxiliary>
+        {console.log('Order Summary')}
         <h3>Your Order</h3>
         <p>A toothsome burger with the following ingredients: </p>
         <ul>
@@ -28,4 +29,4 @@ return(
 
 };
 
-export default orderSummary;
+export default React.memo(orderSummary);

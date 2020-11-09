@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from '../../axios-orders';
+
 import Auxiliary from '../../hoc/Auxiliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -41,8 +43,34 @@ class BurgerBuilder extends Component {
     };
 
     purchaseContinueHandler = () => {
-        alert('You Continue');
-        //this.purchaseCancelHandler();
+        /**The base url in already set in the 'axios-orders.js' 
+         * /orders will be appended to the base url and the orders collection will be
+         * created on the fly, just like mongodb.
+         * '.json' has to be added in the url when working with firestore.
+         * For production ready application, the totalPrice should always be calculated on the
+         * server, so that the user can't manipulate the code
+        */
+
+        const order = {
+            ingredients: this.state.ingredients,
+            totalPrice: this.state.totalPrice,
+            customer:  {
+                name: 'Ritik Sinha',
+                address: {
+                    street: 'Teststreet',
+                    pincode: '843108',
+                    dist: 'Muzaffarpur'
+                },
+                email: 'ritiksinha2013@live.com'
+            },
+            deliveryMethod: 'instant'
+        }
+
+        axios.post('/orders.json', order)
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
+
+
     };
 
     updatePurchaseState = (ingredients) => {
