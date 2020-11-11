@@ -15,7 +15,7 @@ const buildControls = (props) => (
         <p>Total Price: <strong>₹{props.totalPrice}</strong></p>
         {
             controls.map(ctrl => {
-                return <BuildControl key={ctrl.label} label={ctrl.label} />
+                return <BuildControl key={ctrl.label} label={ctrl.label} disabledInfo={props.disabledInfo} />
             })
         }
         {console.log('disabled: ' + props.purchasable)}

@@ -21,16 +21,21 @@ const INGREDIENTS_PRICE = {
 class BurgerBuilder extends Component {
 
     state = {
-        ingredients: {
-            Meat: 0,
-            Cheese: 0,
-            Salad: 0,
-            Bacon: 0
-        },
+        ingredients: null,
         purchasable: false,
         totalPrice: 0,
         purchasing: false,
         loading: false
+    };
+
+    componentDidMount = () => {
+        //fetching the ingredients data from the sever, to set the state 
+        axios.get('/ingredients.json')
+            .then(res => {
+                console.log(res.data)
+                this.setState({ ingredients: res.data })
+            })
+            .catch(err => console.log(err))
     };
 
     purchaseHandler = () => {
@@ -54,12 +59,12 @@ class BurgerBuilder extends Component {
          * server, so that the user can't manipulate the code
         */
 
-        this.setState({loading: true})
+        this.setState({ loading: true })
 
         const order = {
             ingredients: this.state.ingredients,
             totalPrice: this.state.totalPrice,
-            customer:  {
+            customer: {
                 name: 'Ritik Sinha',
                 address: {
                     street: 'Teststreet',
@@ -72,14 +77,14 @@ class BurgerBuilder extends Component {
         }
 
         axios.post('/orders.json', order)
-        .then(res => {
-            console.log(res);
-            this.setState({loading: false, purchasing: false})
-        })
-        .catch(err => {
-            console.log(err);
-            this.setState({loading: false, purchasing: false})
-        });
+            .then(res => {
+                console.log(res);
+                this.setState({ loading: false, purchasing: false })
+            })
+            .catch(err => {
+                console.log(err);
+                this.setState({ loading: false, purchasing: false })
+            });
 
 
     };
@@ -140,29 +145,48 @@ class BurgerBuilder extends Component {
             disabledInfo[keys] = disabledInfo[keys] <= 0
         }
 
-        let orderSummary = <OrderSummary ingredients={this.state.ingredients}
-        continuePurchase={this.purchaseContinueHandler}
-        clicked={this.purchaseCancelHandler} totalPrice={this.state.totalPrice} />
+        let orderSummary = null;
 
-        if(this.state.loading)
+        let burger = <Spinner />;
+        if (this.state.ingredients) {
+            burger = (
+                <Auxiliary>
+                    <Burger ingredients={this.state.ingredients} />
+                    <BuildControls totalPrice={this.state.totalPrice}
+                        purchasable={this.state.purchasable} showModal={this.purchaseHandler} disabledInfo={disabledInfo} />
+                </Auxiliary>
+            )
+            orderSummary = <OrderSummary ingredients={this.state.ingredients}
+                continuePurchase={this.purchaseContinueHandler}
+                clicked={this.purchaseCancelHandler} totalPrice={this.state.totalPrice} />
+            if (this.state.loading)
+                orderSummary = <Spinner />;
+
+
+        }
+
+        if (this.state.loading)
             orderSummary = <Spinner />
+
 
         return (
             <Auxiliary>
                 <IngredientContext.Provider value={{
                     addIngredient: this.addIngredient,
-                    removeIngredient: this.removeIngredient,
-                    disabled: disabledInfo
+                    removeIngredient: this.removeIngredient
                 }}>
+                    {/** Initially, the app will fail to load. This is coz we are setting the state in 'componentDidMount'
+                 * which runs only after the 'render' gets executed. But here in render, we are passing the 
+                 * ingredients state to Burger component, which is performing some operations on the 'ingredient'
+                 * which is null initially. To prevent this, we will keep a check on 'ingredients' before passing it to any
+                 * Component.
+                */}
 
-                    <Burger ingredients={this.state.ingredients} />
-                    <BuildControls totalPrice={this.state.totalPrice}
-                        purchasable={this.state.purchasable} showModal={this.purchaseHandler} />
-
+                    <Modal show={this.state.purchasing} clicked={this.purchaseCancelHandler} >
+                        {orderSummary}
+                    </Modal>
+                    {burger}
                 </IngredientContext.Provider>
-                <Modal show={this.state.purchasing} clicked={this.purchaseCancelHandler} >
-                    {orderSummary}
-                </Modal>
             </Auxiliary>
         );
     };

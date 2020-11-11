@@ -13,7 +13,7 @@ const buildControl = (props) => {
                 onClick={() => ingredientContext.addIngredient(props.label)} >More</button>
             <button className={classes.More}
                 onClick={() => ingredientContext.removeIngredient(props.label)}
-                disabled={ingredientContext.disabled[props.label]} >Less</button>
+                disabled={props.disabledInfo[props.label]} >Less</button>
         </div>
 
     )
